@@ -1,0 +1,17 @@
+==================================================
+           FACTURA DE PAGO - RENT-A-CAR           
+==================================================
+Fecha Emision: 29/07/2026 13:17:17
+Reserva:       RES-0D2527D9
+Cliente:       Bob Esponja
+Cedula:        123824612
+Vehiculo:      Toyota Corolla
+Matricula:     ABC-1234
+--------------------------------------------------
+Monto Pagado:  $339.5
+Metodo Pago:   EFECTIVO
+Referencia:    N/A
+Estado Pago:   PENDIENTE
+--------------------------------------------------
+Total Reserva: $840.0
+==================================================

@@ -1,0 +1,17 @@
+==================================================
+           FACTURA DE PAGO - RENT-A-CAR           
+==================================================
+Fecha Emision: 29/07/2026 13:06:08
+Reserva:       RES-BD2B37E7
+Cliente:       Juan Perez
+Cedula:        1234567890
+Vehiculo:      Toyota Corolla
+Matricula:     ABC-1234
+--------------------------------------------------
+Monto Pagado:  $10.5
+Metodo Pago:   TARJETA
+Referencia:    REF-007-TARJETA
+Estado Pago:   COMPLETADO
+--------------------------------------------------
+Total Reserva: $400.0
+==================================================
