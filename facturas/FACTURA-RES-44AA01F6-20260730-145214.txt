@@ -1,0 +1,17 @@
+==================================================
+           FACTURA DE PAGO - RENT-A-CAR           
+==================================================
+Fecha Emision: 30/07/2026 14:52:14
+Reserva:       RES-44AA01F6
+Cliente:       Juan Pérez López
+Cedula:        1234567890
+Vehiculo:      Kia Sportage
+Matricula:     PBM-8596
+--------------------------------------------------
+Monto Pagado:  $250.0
+Metodo Pago:   TARJETA
+Referencia:    REF-003-TARJETA
+Estado Pago:   COMPLETADO
+--------------------------------------------------
+Total Reserva: $250.0
+==================================================

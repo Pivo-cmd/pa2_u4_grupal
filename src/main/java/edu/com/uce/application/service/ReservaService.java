@@ -56,7 +56,7 @@ public class ReservaService {
         }
 
         if (!vendedor.getActivo()) {
-            throw new RuntimeException("El vendedor "+ vendedor.getActivo() + " no está activo. No se puede gestionar la reserva");
+            throw new RuntimeException("El vendedor "+ vendedor.getNombre() + " no está activo. No se puede gestionar la reserva");
         }
 
         Vehiculo vehiculo = this.vehiculoService.buscarPorId(vehiculoId);
@@ -110,8 +110,6 @@ public class ReservaService {
         reserva.setTotal(vehiculo.getPrecioDia() * dias);
 
         this.reservaRepository.persist(reserva);
-        vehiculo.setDisponible(false);
-        vehiculoService.actualizar(vehiculo.getId(), vehiculo, vehiculo.getSucursal().getId());
         
         return reserva;
     }
@@ -232,19 +230,7 @@ public class ReservaService {
                 "No se puede eliminar la reserva porque tiene " + 
                 pagos.size() + " pagos asociados. "
         );
-        }
-
-        Vehiculo vehiculo = reserva.getVehiculo();
-        if (vehiculo != null) {
-            vehiculo.setDisponible(true);
-            this.vehiculoService.actualizar(
-                vehiculo.getId(), 
-                vehiculo, 
-                vehiculo.getSucursal().getId()
-            );
-            System.out.println("Vehículo " + vehiculo.getMatricula() + " liberado.");
-        }
-        
+        }       
         this.reservaRepository.delete(reserva);
     }
 
@@ -320,10 +306,19 @@ public class ReservaService {
 
     public void confirmar(Integer id) {
         Reserva reserva = this.reservaRepository.findById(id);
+        if (reserva == null) {
+        throw new RuntimeException("Reserva no encontrada con ID: " + id);
+        }
+        
         if (reserva != null && "PENDIENTE".equals(reserva.getEstado())) {
             reserva.setEstado("CONFIRMADA");
             this.reservaRepository.persist(reserva);
         }
+
+        Vehiculo vehiculo = reserva.getVehiculo();
+        vehiculo.setDisponible(false);
+        vehiculoService.actualizar(vehiculo.getId(), vehiculo, vehiculo.getSucursal().getId());
+        System.out.println("Reserva confirmada: " + reserva.getCodigo() + " - Vehículo " + vehiculo.getMatricula() + " bloqueado.");
     }
 
 }
