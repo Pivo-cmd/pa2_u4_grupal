@@ -33,6 +33,8 @@ public class ReservaService {
     @Inject
     private SucursalService sucursalService;
 
+    @Inject PagoService pagoService;
+
     @Auditar
     @MedirTiempo
     public Reserva registrar(Reserva reserva, Integer clienteId, Integer vendedorId,
@@ -45,9 +47,35 @@ public class ReservaService {
         }
 
         Cliente cliente = this.clienteService.buscarPorId(clienteId);
+        if(cliente == null){
+            throw new RuntimeException("Cliente no encontrado con ID: " + clienteId);
+        }
         Vendedor vendedor = this.vendedorService.buscarPorId(vendedorId);
+        if(vendedor == null){
+            throw new RuntimeException("Vendedor no encontrado con ID: " +vendedorId);
+        }
+
+        if (!vendedor.getActivo()) {
+            throw new RuntimeException("El vendedor "+ vendedor.getActivo() + " no está activo. No se puede gestionar la reserva");
+        }
+
         Vehiculo vehiculo = this.vehiculoService.buscarPorId(vehiculoId);
+        if (vehiculo == null) {
+            throw new RuntimeException("Vehiculo no encontrado con ID: " + vehiculoId);
+        }
+
+         if (Boolean.FALSE.equals(vehiculo.getDisponible())) {
+            throw new RuntimeException("El vehículo con placa " + vehiculo.getMatricula() + " está fuera de servicio.");
+        }
+
         Sucursal sucursalRecogida = this.sucursalService.buscarPorId(sucursalRecogidaId);
+        if (sucursalRecogida == null) {
+            throw new RuntimeException("Sucursal de recogida no encontrada con ID: " + sucursalRecogidaId);
+        }
+
+        if(!sucursalRecogida.getActiva()){
+            throw new RuntimeException("La sucursal de recogida " + sucursalRecogida.getNombre() + " no está activa.");
+        }
 
         if (!sucursalRecogida.getId().equals(vehiculo.getSucursal().getId())) {
             throw new RuntimeException(
@@ -56,9 +84,11 @@ public class ReservaService {
                             "'. No puede recogerse en '" + sucursalRecogida.getNombre() + "'.");
         }
         Sucursal sucursalDevolucion = this.sucursalService.buscarPorId(sucursalDevolucionId);
-
-        if (Boolean.FALSE.equals(vehiculo.getDisponible())) {
-            throw new RuntimeException("El vehículo con placa " + vehiculo.getMatricula() + " está fuera de servicio.");
+        if(sucursalDevolucion == null){
+            throw new RuntimeException("Sucursal de devolución no encontrada con ID: " + sucursalDevolucionId);
+        }
+        if (!sucursalDevolucion.getActiva()) {
+            throw new RuntimeException("La sucursal de devolución " + sucursalDevolucion.getNombre() + " no está activa.");
         }
 
         boolean existeSolapamiento = this.existeReservaSolapada(vehiculoId,
@@ -195,6 +225,26 @@ public class ReservaService {
         if (reserva == null) {
             throw new RuntimeException("Reserva no encontrada");
         }
+
+        List<Pago> pagos = this.pagoService.listarPorReserva(id);
+        if (!pagos.isEmpty()) {
+            throw new RuntimeException(
+                "No se puede eliminar la reserva porque tiene " + 
+                pagos.size() + " pagos asociados. "
+        );
+        }
+
+        Vehiculo vehiculo = reserva.getVehiculo();
+        if (vehiculo != null) {
+            vehiculo.setDisponible(true);
+            this.vehiculoService.actualizar(
+                vehiculo.getId(), 
+                vehiculo, 
+                vehiculo.getSucursal().getId()
+            );
+            System.out.println("Vehículo " + vehiculo.getMatricula() + " liberado.");
+        }
+        
         this.reservaRepository.delete(reserva);
     }
 

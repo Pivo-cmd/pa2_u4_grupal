@@ -1,0 +1,17 @@
+==================================================
+           FACTURA DE PAGO - RENT-A-CAR           
+==================================================
+Fecha Emision: 30/07/2026 13:22:14
+Reserva:       RES-58D4A156
+Cliente:       Juan Pérez López
+Cedula:        1234567890
+Vehiculo:      Aveo Emotion
+Matricula:     PCQ-4251
+--------------------------------------------------
+Monto Pagado:  $150.0
+Metodo Pago:   TARJETA
+Referencia:    REF-002-TARJETA
+Estado Pago:   COMPLETADO
+--------------------------------------------------
+Total Reserva: $150.0
+==================================================
